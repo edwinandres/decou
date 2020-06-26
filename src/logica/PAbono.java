@@ -67,7 +67,7 @@ public class PAbono{
         //sSQL2 = "select * from tblproducto where nombre like '%" + buscar + "%'  order by idProducto desc";
         sSQL= "SELECT per.nombre, per.apellidos,per.telefono, cre.idCredito, ven.total from tblpersona per inner join tblventa ven "
                 + "on ven.cedulaCliente= per.numeroDocumento INNER JOIN tblcredito cre "
-                + "on cre.numFactura= ven.numeroFactura where ven.tipoVenta=\"credito\" AND ven.cedulaCliente="+ buscar;
+                + "on cre.numFactura= ven.numeroFactura where ven.tipoVenta=\"credito\" and cre.estado=\"activo\" AND ven.cedulaCliente="+ buscar;
         
         try {
             Statement st = cn.createStatement();
@@ -207,6 +207,7 @@ public class PAbono{
         double valorpagado=0;
         Date fecha=null;
         double totalAbonado=0;
+        int numeroAbono=1;
         
         //consulta sql que traera todos los datos requeridos para llenar la listaabonos
        sSQL= "SELECT abo.idAbono, abo.fecha, abo.valorAbono, abo.idCredito  from tblabono abo WHERE abo.idCredito ="+ idabuscar;
@@ -218,7 +219,9 @@ public class PAbono{
             
             while(rs.next()){
                 //se cargan los valores consultados en variables
-                idcredito= rs.getInt("idCredito");
+                //idcredito= rs.getInt("idCredito");
+                idcredito= numeroAbono;
+                numeroAbono++;
                 idabono= rs.getInt("idAbono");               
                 valorpagado= rs.getDouble("valorAbono"); 
                 totalAbonado+= valorpagado;
@@ -256,7 +259,7 @@ public class PAbono{
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             matriz,
             new String [] {
-                "No. credito", "Id abono","Abono","Fecha"
+                "No. abono", "Id abono","Abono","Fecha"
             }
         )
              //hacer editable solo la tercer columna   
@@ -343,5 +346,81 @@ public class PAbono{
             return 0;
         }
     }
+    
+    public double consultarCuotasConMora(String idcredito){
+    
+        double cuotasConMora=0;
+        sSQL="SELECT count(mora.fecha)as conteo FROM tblmora mora WHERE operatividad=\"S\" and mora.idCredito="+idcredito;
+    
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sSQL);
+            
+            while(rs.next()){
+                cuotasConMora = rs.getDouble("conteo");
+                
+               
+            }
+            
+            return cuotasConMora;
+            
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+            return 0;
+        }
+    }
+    
+    public double consultarCuotasPagadas(String idcredito){
+    
+        double cuotasPagadas=0;
+        sSQL="SELECT count(abo.fecha) as conteo FROM tblabono abo WHERE abo.idCredito="+idcredito;
+        
+    
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sSQL);
+            
+            while(rs.next()){
+                cuotasPagadas = rs.getDouble("conteo");
+                
+               
+            }
+            
+            return cuotasPagadas;
+            
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+            return 0;
+        }
+    }
+    
+    public double consultarCuotasAcordadas(String idcredito){
+    
+        double cuotasAcordadas=0;
+        sSQL="select cre.numeroCuotas from tblcredito cre where cre.idcredito="+idcredito;
+        
+    
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sSQL);
+            
+            while(rs.next()){
+                cuotasAcordadas = rs.getDouble("numeroCuotas");
+                
+               
+            }
+            
+            return cuotasAcordadas;
+            
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(null, e);
+            return 0;
+        }
+    }
+    
+    
+    
+    //SELECT count(abo.fecha) FROM tblabono abo WHERE abo.idCredito="125" consultar cuantas cuotas pagadas
+    //SELECT count(mora.fecha) FROM tblmora mora WHERE mora.idCredito="3" and operatividad="S" consultar cuotas con mora
     
 }

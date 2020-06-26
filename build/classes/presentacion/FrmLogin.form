@@ -93,6 +93,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtlogin">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtloginKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtpassword">
       <Events>

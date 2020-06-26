@@ -14,10 +14,10 @@ public class PGenerarFormato {
     public String generarEncabezado(String fecha, String numeroFactura, String cliente, String nit, String telefono){
         String encabezado="";
         encabezado= fecha +"\r\n"+ "Factura numero: "+ numeroFactura+"\r\nDECOU\r\n"
-                +"Telefono: numero de telefono\r\n"
-                +"NIT nit de decou\r\n"
-                +"direccion de decou\r\n"
-                +"Cliente: "+cliente
+                +"Telefono: 2772412\r\n"
+                +"NIT: 1036654780\r\n"
+                +"Direccion: cra 49 #41-53\r\n"
+                +"\r\nCliente: "+cliente
                 +"\r\nNit: "+nit
                 +"\r\nTelefono: "+ telefono
                 +"\r\n";
